@@ -1,9 +1,13 @@
-import asyncio
-import os
-
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import (
+    Message,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+    ReplyKeyboardRemove,
+)
+from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.context import FSMContext
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
@@ -11,7 +15,12 @@ if not BOT_TOKEN:
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
-
+class AutoInsurance(StatesGroup):
+    full_name = State()
+    phone = State()
+    car_model = State()
+    car_number = State()
+    car_year = State()
 menu = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="🚗 Avto sug'urta")],
@@ -32,7 +41,12 @@ async def start(message: Message):
         "Quyidagi xizmatlardan birini tanlang:",
         reply_markup=menu
     )
-
+phone_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="📱 Telefon raqamni yuborish", request_contact=True)]
+    ],
+    resize_keyboard=True
+)
 
 @dp.message(lambda message: message.text == "🚗 Avto sug'urta")
 async def auto(message: Message):
