@@ -3,7 +3,7 @@ import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
@@ -12,10 +12,62 @@ if not BOT_TOKEN:
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
+menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="🚗 Avto sug'urta")],
+        [KeyboardButton(text="✈️ Sayohat sug'urtasi")],
+        [KeyboardButton(text="🏥 Tibbiy sug'urta")],
+        [KeyboardButton(text="📞 Bog'lanish"),
+         KeyboardButton(text="ℹ️ Biz haqimizda")]
+    ],
+    resize_keyboard=True
+)
+
 
 @dp.message(CommandStart())
 async def start(message: Message):
-    await message.answer("👋 Assalomu alaykum!\n\nApex Insurance botiga xush kelibsiz.")
+    await message.answer(
+        "👋 Assalomu alaykum!\n\n"
+        "Apex Insurance botiga xush kelibsiz.\n\n"
+        "Quyidagi xizmatlardan birini tanlang:",
+        reply_markup=menu
+    )
+
+
+@dp.message(lambda message: message.text == "🚗 Avto sug'urta")
+async def auto(message: Message):
+    await message.answer(
+        "🚗 Avto sug'urta bo'limi.\n\n"
+        "Tez orada bu yerda sug'urta rasmiylashtirish xizmati mavjud bo'ladi."
+    )
+
+
+@dp.message(lambda message: message.text == "✈️ Sayohat sug'urtasi")
+async def travel(message: Message):
+    await message.answer(
+        "✈️ Sayohat sug'urtasi bo'limi."
+    )
+
+
+@dp.message(lambda message: message.text == "🏥 Tibbiy sug'urta")
+async def medical(message: Message):
+    await message.answer(
+        "🏥 Tibbiy sug'urta bo'limi."
+    )
+
+
+@dp.message(lambda message: message.text == "📞 Bog'lanish")
+async def contact(message: Message):
+    await message.answer(
+        "📞 Telefon: +998 88 272 70 73"
+    )
+
+
+@dp.message(lambda message: message.text == "ℹ️ Biz haqimizda")
+async def about(message: Message):
+    await message.answer(
+        "Apex Insurance — ishonchli sug'urta xizmatlari."
+    )
 
 
 async def main():
