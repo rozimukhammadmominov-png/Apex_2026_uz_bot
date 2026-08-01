@@ -1,3 +1,6 @@
+import asyncio
+import os
+
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import (
@@ -48,11 +51,12 @@ phone_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
-@dp.message(lambda message: message.text == "🚗 Avto sug'urta")
-async def auto(message: Message):
+@dp.message(F.text == "🚗 Avto sug'urta")
+async def auto(message: Message, state: FSMContext):
+    await state.set_state(AutoInsurance.full_name)
     await message.answer(
-        "🚗 Avto sug'urta bo'limi.\n\n"
-        "Tez orada bu yerda sug'urta rasmiylashtirish xizmati mavjud bo'ladi."
+        "👤 F.I.Sh. (to'liq ism-familiyangizni) kiriting:",
+        reply_markup=ReplyKeyboardRemove()
     )
 
 
@@ -88,6 +92,14 @@ async def main():
     print("✅ Bot ishga tushdi")
     await dp.start_polling(bot)
 
+@dp.message(AutoInsurance.full_name)
+async def get_name(message: Message, state: FSMContext):
+    await state.update_data(full_name=message.text)
+    await state.set_state(AutoInsurance.phone)
 
+    await message.answer(
+        "📱 Telefon raqamingizni yuboring:",
+        reply_markup=phone_keyboard
+    )
 if __name__ == "__main__":
     asyncio.run(main())
