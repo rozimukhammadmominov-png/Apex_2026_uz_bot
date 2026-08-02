@@ -101,5 +101,23 @@ async def get_name(message: Message, state: FSMContext):
         "📱 Telefon raqamingizni yuboring:",
         reply_markup=phone_keyboard
     )
+    @dp.message(AutoInsurance.car_number)
+async def get_car_number(message: Message, state: FSMContext):
+    await state.update_data(car_number=message.text)
+
+    data = await state.get_data()
+
+    text = (
+        "✅ Avto sug'urta arizangiz qabul qilindi!\n\n"
+        f"👤 F.I.Sh.: {data['full_name']}\n"
+        f"📱 Telefon: {data['phone']}\n"
+        f"🚘 Avtomobil: {data['car_model']}\n"
+        f"🔢 Davlat raqami: {data['car_number']}\n\n"
+        "Operatorimiz tez orada siz bilan bog'lanadi."
+    )
+
+    await message.answer(text, reply_markup=menu)
+    await state.clear()
+    
 if __name__ == "__main__":
     asyncio.run(main())
