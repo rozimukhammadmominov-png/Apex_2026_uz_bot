@@ -9,8 +9,8 @@ from aiogram.types import (
     KeyboardButton,
     ReplyKeyboardRemove,
 )
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
@@ -23,101 +23,29 @@ class AutoInsurance(StatesGroup):
     phone = State()
     car_model = State()
     car_number = State()
-    car_year = State()
-menu = ReplyKeyboardMarkup(
+    menu = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="🚗 Avto sug'urta")],
-        [KeyboardButton(text="✈️ Sayohat sug'urtasi")],
-        [KeyboardButton(text="🏥 Tibbiy sug'urta")],
-        [KeyboardButton(text="📞 Bog'lanish"),
-         KeyboardButton(text="ℹ️ Biz haqimizda")]
+        [KeyboardButton(text="🚗 Avto sug'urta"), KeyboardButton(text="✈️ Sayohat sug'urtasi")],
+        [KeyboardButton(text="🏠 Mol-mulk sug'urtasi"), KeyboardButton(text="⚠️ Baxtsiz hodisalardan ehtiyot shart sug'urtasi")],
+        [KeyboardButton(text="🏃 Sportchilar sug'urtasi"), KeyboardButton(text="🚜 Qishloq xo'jaligi sug'urtasi")],
+        [KeyboardButton(text="🏭 Korxona sug'urtasi"), KeyboardButton(text="📄 Mening arizalarim")],
+        [KeyboardButton(text="📍 Filiallar"), KeyboardButton(text="☎️ Operator bilan bog'lanish")],
+        [KeyboardButton(text="ℹ️ Biz haqimizda")],
     ],
     resize_keyboard=True
 )
 
-
-@dp.message(CommandStart())
-async def start(message: Message):
-    await message.answer(
-        "👋 Assalomu alaykum!\n\n"
-        "Apex Insurance botiga xush kelibsiz.\n\n"
-        "Quyidagi xizmatlardan birini tanlang:",
-        reply_markup=menu
-    )
 phone_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="📱 Telefon raqamni yuborish", request_contact=True)]
     ],
     resize_keyboard=True
+    )
+@dp.message(CommandStart())
+async def start(message: Message):
+    await message.answer(
+        "👋 Assalomu alaykum!\n\n"
+        "Apex Insurance botiga xush kelibsiz!\n\n"
+        "Kerakli xizmatni tanlang:",
+        reply_markup=menu
 )
-
-@dp.message(F.text == "🚗 Avto sug'urta")
-async def auto(message: Message, state: FSMContext):
-    await state.set_state(AutoInsurance.full_name)
-    await message.answer(
-        "👤 F.I.Sh. (to'liq ism-familiyangizni) kiriting:",
-        reply_markup=ReplyKeyboardRemove()
-    )
-
-
-@dp.message(lambda message: message.text == "✈️ Sayohat sug'urtasi")
-async def travel(message: Message):
-    await message.answer(
-        "✈️ Sayohat sug'urtasi bo'limi."
-    )
-
-
-@dp.message(lambda message: message.text == "🏥 Tibbiy sug'urta")
-async def medical(message: Message):
-    await message.answer(
-        "🏥 Tibbiy sug'urta bo'limi."
-    )
-
-
-@dp.message(lambda message: message.text == "📞 Bog'lanish")
-async def contact(message: Message):
-    await message.answer(
-        "📞 Telefon: +998 88 272 70 73"
-    )
-
-
-@dp.message(lambda message: message.text == "ℹ️ Biz haqimizda")
-async def about(message: Message):
-    await message.answer(
-        "Apex Insurance — ishonchli sug'urta xizmatlari."
-    )
-
-
-async def main():
-    print("✅ Bot ishga tushdi")
-    await dp.start_polling(bot)
-
-@dp.message(AutoInsurance.full_name)
-async def get_name(message: Message, state: FSMContext):
-    await state.update_data(full_name=message.text)
-    await state.set_state(AutoInsurance.phone)
-
-    await message.answer(
-        "📱 Telefon raqamingizni yuboring:",
-        reply_markup=phone_keyboard
-    )
-    @dp.message(AutoInsurance.car_number)
-async def get_car_number(message: Message, state: FSMContext):
-    await state.update_data(car_number=message.text)
-
-    data = await state.get_data()
-
-    text = (
-        "✅ Avto sug'urta arizangiz qabul qilindi!\n\n"
-        f"👤 F.I.Sh.: {data['full_name']}\n"
-        f"📱 Telefon: {data['phone']}\n"
-        f"🚘 Avtomobil: {data['car_model']}\n"
-        f"🔢 Davlat raqami: {data['car_number']}\n\n"
-        "Operatorimiz tez orada siz bilan bog'lanadi."
-    )
-
-    await message.answer(text, reply_markup=menu)
-    await state.clear()
-    
-if __name__ == "__main__":
-    asyncio.run(main())
