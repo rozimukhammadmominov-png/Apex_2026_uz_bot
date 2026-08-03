@@ -82,7 +82,14 @@ async def get_car_number(message: Message, state: FSMContext):
     await state.update_data(car_number=message.text)
 
     data = await state.get_data()
-
+await bot.send_message(
+    ADMIN_ID,
+    f"📥 Yangi avto sug'urta arizasi!\n\n"
+    f"👤 F.I.Sh.: {data['full_name']}\n"
+    f"📱 Telefon: {data['phone']}\n"
+    f"🚘 Avtomobil: {data['car_model']}\n"
+    f"🔢 Davlat raqami: {data['car_number']}"
+    )
     await message.answer(
         f"✅ Arizangiz qabul qilindi!\n\n"
         f"👤 F.I.Sh.: {data['full_name']}\n"
