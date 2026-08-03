@@ -55,7 +55,8 @@ async def start(message: Message):
         reply_markup=menu
 )
  
-    @dp.message(AutoInsurance.phone, F.contact)
+  
+@dp.message(AutoInsurance.phone, F.contact)
 async def get_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.contact.phone_number)
     await state.set_state(AutoInsurance.car_model)
@@ -118,5 +119,6 @@ async def get_full_name(message: Message, state: FSMContext):
         reply_markup=phone_keyboard
     )
     
+
 if __name__ == "__main__":
     asyncio.run(main())
