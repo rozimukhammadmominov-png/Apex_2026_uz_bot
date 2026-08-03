@@ -51,6 +51,45 @@ async def start(message: Message):
         "Kerakli xizmatni tanlang:",
         reply_markup=menu
 )
+    @dp.message(AutoInsurance.phone, F.contact)
+async def get_phone(message: Message, state: FSMContext):
+    await state.update_data(phone=message.contact.phone_number)
+    await state.set_state(AutoInsurance.car_model)
+
+    await message.answer(
+        "🚘 Avtomobil rusumini kiriting.\n\nMasalan: Cobalt, Gentra, Tracker",
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+
+@dp.message(AutoInsurance.car_model)
+async def get_car_model(message: Message, state: FSMContext):
+    await state.update_data(car_model=message.text)
+    await state.set_state(AutoInsurance.car_number)
+
+    await message.answer(
+        "🔢 Davlat raqamini kiriting.\n\nMasalan: 50 A 123 BC"
+    )
+
+
+@dp.message(AutoInsurance.car_number)
+async def get_car_number(message: Message, state: FSMContext):
+    await state.update_data(car_number=message.text)
+
+    data = await state.get_data()
+
+    await message.answer(
+        f"✅ Arizangiz qabul qilindi!\n\n"
+        f"👤 F.I.Sh.: {data['full_name']}\n"
+        f"📱 Telefon: {data['phone']}\n"
+        f"🚘 Avtomobil: {data['car_model']}\n"
+        f"🔢 Davlat raqami: {data['car_number']}\n\n"
+        "Operatorimiz tez orada siz bilan bog'lanadi.",
+        reply_markup=menu
+    )
+
+    await state.clear()
+    
 
 async def main():
     print("✅ Bot ishga tushdi")
