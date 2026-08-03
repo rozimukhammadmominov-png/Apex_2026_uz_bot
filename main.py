@@ -16,6 +16,8 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN topilmadi")
 
+ADMIN_ID = 8242100594
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 class AutoInsurance(StatesGroup):
@@ -43,6 +45,7 @@ phone_keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
     )
+
 @dp.message(CommandStart())
 async def start(message: Message):
     await message.answer(
@@ -51,6 +54,7 @@ async def start(message: Message):
         "Kerakli xizmatni tanlang:",
         reply_markup=menu
 )
+ 
     @dp.message(AutoInsurance.phone, F.contact)
 async def get_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.contact.phone_number)
