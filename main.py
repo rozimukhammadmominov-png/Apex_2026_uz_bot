@@ -92,6 +92,8 @@ async def get_car_number(message: Message, state: FSMContext):
         "Operatorimiz tez orada siz bilan bog'lanadi.",
         reply_markup=menu
     )
+  await state.clear()
+
 
     @dp.message(F.text == "🚗 Avto sug'urta")
 async def auto_insurance(message: Message, state: FSMContext):
