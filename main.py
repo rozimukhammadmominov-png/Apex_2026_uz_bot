@@ -56,5 +56,24 @@ async def main():
     print("✅ Bot ishga tushdi")
     await dp.start_polling(bot)
 
+@dp.message(F.text == "🚗 Avto sug'urta")
+async def auto_insurance(message: Message, state: FSMContext):
+    await state.set_state(AutoInsurance.full_name)
+    await message.answer(
+        "👤 Iltimos, F.I.Sh. (to'liq ism-familiyangizni) kiriting:",
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+
+@dp.message(AutoInsurance.full_name)
+async def get_full_name(message: Message, state: FSMContext):
+    await state.update_data(full_name=message.text)
+    await state.set_state(AutoInsurance.phone)
+
+    await message.answer(
+        "📱 Telefon raqamingizni yuboring:",
+        reply_markup=phone_keyboard
+    )
+    
 if __name__ == "__main__":
     asyncio.run(main())
