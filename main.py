@@ -23,7 +23,9 @@ class AutoInsurance(StatesGroup):
     phone = State()
     car_model = State()
     car_number = State()
-    menu = ReplyKeyboardMarkup(
+  
+
+menu = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="🚗 Avto sug'urta"), KeyboardButton(text="✈️ Sayohat sug'urtasi")],
         [KeyboardButton(text="🏠 Mol-mulk sug'urtasi"), KeyboardButton(text="⚠️ Baxtsiz hodisalardan ehtiyot shart sug'urtasi")],
