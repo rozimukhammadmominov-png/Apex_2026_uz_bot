@@ -55,6 +55,7 @@ async def start(message: Message):
         reply_markup=menu
 )
  
+
   
 @dp.message(AutoInsurance.phone, F.contact)
 async def get_phone(message: Message, state: FSMContext):
@@ -67,30 +68,22 @@ async def get_phone(message: Message, state: FSMContext):
     )
 
 
-@dp.message(AutoInsurance.car_model)
-async def get_car_model(message: Message, state: FSMContext):
-    await state.update_data(car_model=message.text)
-    await state.set_state(AutoInsurance.car_number)
-
-    await message.answer(
-        "🔢 Davlat raqamini kiriting.\n\nMasalan: 50 A 123 BC"
-    )
-
-
 @dp.message(AutoInsurance.car_number)
 async def get_car_number(message: Message, state: FSMContext):
     await state.update_data(car_number=message.text)
 
     data = await state.get_data()
-         await bot.send_message(
-    ADMIN_ID,
-    f"📥 Yangi avto sug'urta arizasi!\n\n"
-    f"👤 F.I.Sh.: {data['full_name']}\n"
-    f"📱 Telefon: {data['phone']}\n"
-    f"🚘 Avtomobil: {data['car_model']}\n"
-    f"🔢 Davlat raqami: {data['car_number']}"
+
+    await bot.send_message(
+        ADMIN_ID,
+        f"📥 Yangi avto sug'urta arizasi!\n\n"
+        f"👤 F.I.Sh.: {data['full_name']}\n"
+        f"📱 Telefon: {data['phone']}\n"
+        f"🚘 Avtomobil: {data['car_model']}\n"
+        f"🔢 Davlat raqami: {data['car_number']}"
     )
-        await message.answer(
+
+    await message.answer(
         f"✅ Arizangiz qabul qilindi!\n\n"
         f"👤 F.I.Sh.: {data['full_name']}\n"
         f"📱 Telefon: {data['phone']}\n"
@@ -99,8 +92,8 @@ async def get_car_number(message: Message, state: FSMContext):
         "Operatorimiz tez orada siz bilan bog'lanadi.",
         reply_markup=menu
     )
-  await state.clear()
 
+    await state.clear()
 
 @dp.message(F.text == "🚗 Avto sug'urta")
 async def auto_insurance(message: Message, state: FSMContext):
@@ -119,9 +112,6 @@ async def get_full_name(message: Message, state: FSMContext):
     await message.answer(
         "📱 Telefon raqamingizni yuboring:",
         reply_markup=phone_keyboard
-    )
-    
-    await state.clear()
     
 
 async def main():
