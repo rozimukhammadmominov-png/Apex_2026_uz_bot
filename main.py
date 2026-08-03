@@ -93,14 +93,7 @@ async def get_car_number(message: Message, state: FSMContext):
         reply_markup=menu
     )
 
-    await state.clear()
-    
-
-async def main():
-    print("✅ Bot ishga tushdi")
-    await dp.start_polling(bot)
-
-@dp.message(F.text == "🚗 Avto sug'urta")
+    @dp.message(F.text == "🚗 Avto sug'urta")
 async def auto_insurance(message: Message, state: FSMContext):
     await state.set_state(AutoInsurance.full_name)
     await message.answer(
@@ -119,6 +112,13 @@ async def get_full_name(message: Message, state: FSMContext):
         reply_markup=phone_keyboard
     )
     
+    await state.clear()
+    
+
+async def main():
+    print("✅ Bot ishga tushdi")
+    await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
