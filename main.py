@@ -109,10 +109,16 @@ async def get_full_name(message: Message, state: FSMContext):
     await state.update_data(full_name=message.text)
     await state.set_state(AutoInsurance.phone)
 
+    
+ @dp.message(AutoInsurance.full_name)
+async def get_full_name(message: Message, state: FSMContext):
+    await state.update_data(full_name=message.text)
+    await state.set_state(AutoInsurance.phone)
+
     await message.answer(
         "📱 Telefon raqamingizni yuboring:",
         reply_markup=phone_keyboard
-    
+    )
 
 async def main():
     print("✅ Bot ishga tushdi")
