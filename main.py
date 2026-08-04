@@ -113,12 +113,6 @@ async def auto_insurance(message: Message, state: FSMContext):
         reply_markup=ReplyKeyboardRemove()
     )
 
-
-@dp.message(AutoInsurance.full_name)
-async def get_full_name(message: Message, state: FSMContext):
-    await state.update_data(full_name=message.text)
-    await state.set_state(AutoInsurance.phone)
-
     
  @dp.message(AutoInsurance.full_name)
 async def get_full_name(message: Message, state: FSMContext):
