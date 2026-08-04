@@ -68,6 +68,16 @@ async def get_phone(message: Message, state: FSMContext):
     )
 
 
+@dp.message(AutoInsurance.car_model)
+async def get_car_model(message: Message, state: FSMContext):
+    await state.update_data(car_model=message.text)
+    await state.set_state(AutoInsurance.car_number)
+
+    await message.answer(
+        "🔢 Davlat raqamini kiriting.\n\nMasalan: 50 A 123 BC"
+)
+
+
 @dp.message(AutoInsurance.car_number)
 async def get_car_number(message: Message, state: FSMContext):
     await state.update_data(car_number=message.text)
